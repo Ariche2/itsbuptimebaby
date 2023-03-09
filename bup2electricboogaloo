@@ -35,6 +35,7 @@ bup_init () {
         bup -d /bup/index/$project/$i init -r BupServer:/bup/$project/$i
     else
         echo "bup -d /bup/index/$project/$i init -r BupServer:/bup/$project/$i"
+    fi
 }
 
 #Function to index the element of the project
@@ -43,6 +44,7 @@ bup_index () {
         bup -d /bup/index/$project/$i index --check $projroot/$i -r BupServer:/bup/$project/$i
     else
         echo "bup -d /bup/index/$project/$i init -r BupServer:/bup/$project/$i"
+    fi
 }
 
 main; exit
