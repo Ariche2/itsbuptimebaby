@@ -10,13 +10,13 @@ readarray -t names < <(find $projroot -mindepth 1 -maxdepth 1 -type d | sed "s,$
 total=${#names[@]} #This counts how many elements the array $names has, and sets $total to that value.
 
 
-printf '%s\n' "Running bup init..."
+printf '%s\n\n' "Running bup init..."
 
 count=0
 for i in "${names[@]}"
 do
     count=$[ $count + 1 ]
-
+    printf -- '-%.0s\n' {1..$(tput cols)}
     printf '%s\n' "Backup $count of $total: $i"
     echo "bup -d /bup/index/$project/$i init -r BupServer:/bup/$project/$i"
 done
