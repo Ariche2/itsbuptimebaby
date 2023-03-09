@@ -12,7 +12,7 @@ testmode=1
 readarray -t names < <(find $projroot -mindepth 1 -maxdepth 1 -type d | sed "s,${projroot},,g") #This runs find on $projroot with a min/max depth of 1, for directories. It then sed's it so remove $projroot so we have just the names of the directories we want to backup. This is all then fed into readarray to make the array "$names".
 total=${#names[@]} #This counts how many elements the array $names has, and sets $total to that value.
 
-
+main () {
 printf '%s\n\n' "Running bup init..."
 
 count=0
@@ -21,10 +21,10 @@ do
     count=$[ $count + 1 ]
     eval printf -- '-%.0s' {1..$(tput cols)} && printf '\n'
     printf '%s\n' "Backup $count of $total: $i"
-    $(bup_init)
-    $(bup_index)
+    bup_init
+    bup_index
 done
-
+}
 
 
 #Functions
@@ -44,3 +44,5 @@ bup_index () {
     else
         echo "bup -d /bup/index/$project/$i init -r BupServer:/bup/$project/$i"
 }
+
+main; exit
