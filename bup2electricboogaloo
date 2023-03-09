@@ -30,7 +30,7 @@ done
 #Functions
 
 #Function to initialise the index for an element of the project
-bup_init() {
+bup_init () {
     if [$testmode != 0]; then
         bup -d /bup/index/$project/$i init -r BupServer:/bup/$project/$i
     else
@@ -38,7 +38,7 @@ bup_init() {
 }
 
 #Function to index the element of the project
-bup_index() {
+bup_index () {
     if [$testmode != 0]; then
         bup -d /bup/index/$project/$i index --check $projroot/$i -r BupServer:/bup/$project/$i
     else
