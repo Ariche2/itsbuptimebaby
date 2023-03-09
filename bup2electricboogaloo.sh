@@ -13,6 +13,7 @@ readarray -t names < <(find $projroot -mindepth 1 -maxdepth 1 -type d | sed "s,$
 total=${#names[@]} #This counts how many elements the array $names has, and sets $total to that value.
 
 main () {
+    
 #Check to see if project folder exists in /bup/index/
 if [[ $project != $(find /bup/index/ -mindepth 1 -maxdepth 1 -type d | sed "s,/bup/index/,,g") ]]; then
     #If it doesn't, make it
