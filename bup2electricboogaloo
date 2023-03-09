@@ -2,6 +2,9 @@
 #Script to backup my DietPi logs and the DietPi internal backup off of the USB stick
 project=LEO-DHCP
 projroot=/mnt/nfs/export/
+testmode=1
+
+
 #$project is the name of the project/stack being backed up. It's used for the index path in bup init.
 #$projroot is the root of the project folder - a seperate index will be created for each subdirectory in this path.
 
@@ -16,12 +19,28 @@ count=0
 for i in "${names[@]}"
 do
     count=$[ $count + 1 ]
-    printf -- '-%.0s\n' {1..$(tput cols)}
+    eval printf -- '-%.0s' {1..$(tput cols)} && printf '\n'
     printf '%s\n' "Backup $count of $total: $i"
-    echo "bup -d /bup/index/$project/$i init -r BupServer:/bup/$project/$i"
+    $(bup_init)
+    $(bup_index)
 done
 
 
 
+#Functions
 
+#Function to initialise the index for an element of the project
+bup_init() {
+    if [$testmode != 0]; then
+        bup -d /bup/index/$project/$i init -r BupServer:/bup/$project/$i
+    else
+        echo "bup -d /bup/index/$project/$i init -r BupServer:/bup/$project/$i"
+}
 
+#Function to index the element of the project
+bup_index() {
+    if [$testmode != 0]; then
+        bup -d /bup/index/$project/$i index --check $projroot/$i -r BupServer:/bup/$project/$i
+    else
+        echo "bup -d /bup/index/$project/$i init -r BupServer:/bup/$project/$i"
+}
