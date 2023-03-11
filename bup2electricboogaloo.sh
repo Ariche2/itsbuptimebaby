@@ -51,19 +51,19 @@ function definevars () {
     project=/testingproj #$project is the name of the project/stack being backed up. It's used for the index path in bup init.
     projroot=/home/leo/testingproj #$projroot is the root of the project folder - a seperate index will be created for each subdirectory in this path.
     testmode=1 #If this is 0, it's a real run. If it's anything else, dry run. Check this is actually true before running, PLEASE DEAR GOD. sleep deprived fucker.
-    # TODO 2 Implement checks for trailing slash. Search cheatsheet for substrings - see https://unix.stackexchange.com/a/423552
+    # TODO 2 Implement sanitising for trailing slashes. Search cheatsheet for substrings - also see https://unix.stackexchange.com/a/423552
     # TODO 3 Could simplify by grabbing $project from $projroot? see https://unix.stackexchange.com/a/423552
     
     readarray -t name < <(find $projroot/ -mindepth 1 -maxdepth 1 -type d | sed "s,${projroot},,g")
-    IFS=$'\n' name=($(sort <<<"${name[*]}")); unset IFS
+    readarray -t name < <(printf '%s\n' "${name[@]}"|sort)
     #This runs find on $projroot with a min/max directory depth of 1, searching for directories only. It then sed's it so remove $projroot
     #so we have just the names of the directories we want to backup. This is all then fed into readarray to make the array "$name".
-    #Finally we sort them, because it looks nicer in the output if they're in alphabetical order.
-    #We also run it a second time to make a version of $name without a preceding slash for use in the remote path.
+    #We also sort them by using printf to add an newline to the end of each element, and then feeding the elements into sort. Then it's fed back into the array.
+    #Then it's run a second time to make a version of $name without a preceding slash for use in the remote path.
     readarray -t namenoslash < <(find $projroot/ -mindepth 1 -maxdepth 1 -type d | sed "s,${projroot}/,,g")
-    IFS=$'\n' namenoslash=($(sort <<<"${namenoslash[*]}")); unset IFS
+    readarray -t namenoslash < <(printf '%s\n' "${namenoslash[@]}"|sort)
 
-    # TODO 5 replace use of sed in these two with bash parameter expansion - sub-string removal
+    # TODO 5 replace use of sed in these two with bash parameter expansion - sub-string removal.
     # see https://unix.stackexchange.com/a/423552
     
     
@@ -77,7 +77,9 @@ function definevars () {
     #Just a little test that hopefully never ever triggers.
     if [[ $total != "$total2" ]]; then
         printf '%s\n\n' "OH SHIT, TOTALS DONT MATCH"
-        die #That's how little I trust this shit.
+        echo total is "$total"
+        echo total2 is "$total2"
+        #die #That's how little I trust this shit.
     fi
 }
 
@@ -143,4 +145,4 @@ printline() { printf -- '%.s─' $(seq 1 "$(tput cols)") ; printf '\n'; } # http
 # TODO 1 replace printline in utils/printline and utils/funcs with the one here as it actually works lol
 
 #run the functions!
-definevars && main; exit
+definevars && echo "${name[@]}" #&& main; exit
