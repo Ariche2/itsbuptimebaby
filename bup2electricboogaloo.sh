@@ -4,6 +4,14 @@
 #I have now realised I probably could've just used bupper. But I am enjoying writing this, so.
 #bupper: https://github.com/tobru/bupper
 
+#########################################################
+#                                                       #
+#         You should read the fucking to do's           #
+#                   you dopey fuck                      #
+#   (and DONT spend 10m looking for a to do tracker)    #
+#                                                       #
+#########################################################
+
 
 function main() {
 
@@ -129,9 +137,9 @@ function bup_save () { #inloop
 
 #Basic functions
 yell() { echo "$0: $*" >&2; }
-die() { yell "${@:2} ($1)"; exit $1; }
+die() { yell "${@:2} ($1)"; exit "$1"; }
 try() { "$@" || die $? "cannot $*"; }
-printline() { printf -- '%.s─' $(seq 1 "$(tput cols)") ; printf '\n'; } https://stackoverflow.com/a/64267019
+printline() { printf -- '%.s─' $(seq 1 "$(tput cols)") ; printf '\n'; } # https://stackoverflow.com/a/64267019
 # TODO 1 replace printline in utils/printline and utils/funcs with the one here as it actually works lol
 
 #run the functions!
